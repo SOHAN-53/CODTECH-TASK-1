@@ -19,3 +19,15 @@
 
 
 ## Overview of the project
+
+
+
+### Project: TO DO LIST WEB APPLICATION
+
+
+
+### Objective
+
+
+
+The objective of the project is to create a to-do list web application.
