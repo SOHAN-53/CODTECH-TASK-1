@@ -1,62 +1,61 @@
-window.addEventListener('load', () => {
-	const form = document.querySelector("#new-task-form");
-	const input = document.querySelector("#new-task-input");
-	const list_el = document.querySelector("#tasks");
+let inpNewTask = $("#inpNewTask");
+let btnAdd = $("#btnAdd");
+let btnReset = $("#btnReset");
+let btnSort = $("#btnSort");
+let btnCleanup = $("#btnCleanup");
+let ulTasks = $("#ulTasks");
 
-	form.addEventListener('submit', (e) => {
-		e.preventDefault();
+function addItem() {
 
-		const task = input.value;
+    let listItem = $('<li>', {'class': 'list-group-item', text: inpNewTask.val()})
 
-		const task_el = document.createElement('div');
-		task_el.classList.add('task');
+    //setting the class of list item to disabled (on click)
+    listItem.click(() => {
+        listItem.toggleClass('done')
+    })
 
-		const task_content_el = document.createElement('div');
-		task_content_el.classList.add('content');
+    //appending the task to the list
+    ulTasks.append(listItem)
 
-		task_el.appendChild(task_content_el);
+    //resetting the input box to empty string
+    inpNewTask.val('')
 
-		const task_input_el = document.createElement('input');
-		task_input_el.classList.add('text');
-		task_input_el.type = 'text';
-		task_input_el.value = task;
-		task_input_el.setAttribute('readonly', 'readonly');
+    //for btnSort and btnCleanup
+    toggleInputButtons()
+}
 
-		task_content_el.appendChild(task_input_el);
+function clearDone() {
+    $('#ulTasks .done').remove()
 
-		const task_actions_el = document.createElement('div');
-		task_actions_el.classList.add('actions');
-		
-		const task_edit_el = document.createElement('button');
-		task_edit_el.classList.add('edit');
-		task_edit_el.innerText = 'Edit';
+    //for btnSort and btnCleanup
+    toggleInputButtons()
+}
 
-		const task_delete_el = document.createElement('button');
-		task_delete_el.classList.add('delete');
-		task_delete_el.innerText = 'Delete';
+function sortTask() {
+    $('#ulTasks .done').appendTo(ulTasks)
+}
 
-		task_actions_el.appendChild(task_edit_el);
-		task_actions_el.appendChild(task_delete_el);
+function toggleInputButtons() {
+    btnReset.prop('disabled', inpNewTask.val() == '')
+    btnAdd.prop('disabled', inpNewTask.val() == '')
+    btnSort.prop('disabled', ulTasks.children().length < 1)
+    btnCleanup.prop('disabled', ulTasks.children().length < 1)
+}
 
-		task_el.appendChild(task_actions_el);
+//Handling "enter" keypress
+inpNewTask.keypress((key) => {
+    if (key.which == 13) addItem()
+})
 
-		list_el.appendChild(task_el);
+inpNewTask.on('input', toggleInputButtons)
 
-		input.value = '';
+btnAdd.click(() => addItem());
 
-		task_edit_el.addEventListener('click', (e) => {
-			if (task_edit_el.innerText.toLowerCase() == "edit") {
-				task_edit_el.innerText = "Save";
-				task_input_el.removeAttribute("readonly");
-				task_input_el.focus();
-			} else {
-				task_edit_el.innerText = "Edit";
-				task_input_el.setAttribute("readonly", "readonly");
-			}
-		});
+btnReset.click(() => {
+    inpNewTask.val('')
+    toggleInputButtons()
+})
 
-		task_delete_el.addEventListener('click', (e) => {
-			list_el.removeChild(task_el);
-		});
-	});
-});
+btnCleanup.click(() => clearDone())
+
+btnSort.click(() => sortTask())
