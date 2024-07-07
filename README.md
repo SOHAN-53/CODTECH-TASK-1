@@ -31,3 +31,11 @@
 
 
 The objective of the project is to create a to-do list web application.
+
+
+
+## Languages used
+
+
+
+HTML, CSS, Javascript 
